@@ -6,6 +6,12 @@ on:
       gh_tag:
         type: string
         required: true
+        description: GitHub tag value
+      artifact_name:
+        type: string
+        required: false
+        description: Artifact name of the function app
+        default: fncapp
 
 jobs:
   deploy_github:
@@ -33,7 +39,7 @@ jobs:
         $version = "$env:RELEASE_VERSION"
         $destination_path = "published/fncapp-$($version).zip"
 
-        Compress-Archive -Path published/* -DestinationPath $destination_path
+        Compress-Archive -Path published/${{ inputs.artifact_name }}/* -DestinationPath $destination_path
 
         echo "FNCAPP_PATH=$destination_path" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
 

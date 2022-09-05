@@ -9,6 +9,8 @@ jobs:
   call_build_test_upload:
     uses: ./.github/workflows/build-test-upload.yaml
     secrets: inherit
+    with:
+      artifact_name: fncapp
 
   call_deployment_github:
     uses: ./.github/workflows/deployment-github.yaml
@@ -16,3 +18,4 @@ jobs:
     - call_build_test_upload
     with:
       gh_tag: ${{ github.ref }}
+      artifact_name: fncapp

@@ -1,7 +1,13 @@
 name: 'Build, Test & Upload'
 
 on:
-  workflow_call
+  workflow_call:
+    inputs:
+      artifact_name:
+        type: string
+        required: false
+        description: Artifact name of the function app
+        default: fncapp
 
 jobs:
   build_test_upload:
@@ -46,6 +52,6 @@ jobs:
     - name: Upload app artifact
       uses: actions/upload-artifact@v2
       with:
-        name: fncapp
+        name: ${{ inputs.artifact_name }}
         path: ${{ github.workspace }}/${{ env.APP_PATH }}
         retention-days: 3
