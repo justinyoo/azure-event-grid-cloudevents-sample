@@ -30,9 +30,7 @@ resource evtgrd 'Microsoft.EventGrid/eventSubscriptions@2022-06-15' = {
       }
     }
     filter: {
-      includedEventTypes: [
-        'All'
-      ]
+      includedEventTypes: null
     }
   }
 }
