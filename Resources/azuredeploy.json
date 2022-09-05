@@ -1,0 +1,941 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.9.1.41621",
+      "templateHash": "17204717888056216959"
+    }
+  },
+  "parameters": {
+    "name": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "Korea Central"
+    },
+    "gitHubBranchName": {
+      "type": "string",
+      "defaultValue": "main"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2021-04-01",
+      "name": "[format('rg-{0}', parameters('name'))]",
+      "location": "[parameters('location')]"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "Resources",
+      "resourceGroup": "[format('rg-{0}', parameters('name'))]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[parameters('name')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "gitHubBranchName": {
+            "value": "[parameters('gitHubBranchName')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.9.1.41621",
+              "templateHash": "17788156438508140872"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "gitHubBranchName": {
+              "type": "string",
+              "defaultValue": "main"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "StorageAccount",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.9.1.41621",
+                      "templateHash": "5717745928808941224"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    }
+                  },
+                  "variables": {
+                    "storage": {
+                      "name": "[format('st{0}', parameters('name'))]",
+                      "location": "[parameters('location')]"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Storage/storageAccounts",
+                      "apiVersion": "2021-06-01",
+                      "name": "[variables('storage').name]",
+                      "location": "[variables('storage').location]",
+                      "kind": "StorageV2",
+                      "sku": {
+                        "name": "Standard_LRS"
+                      },
+                      "properties": {
+                        "supportsHttpsTrafficOnly": true
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "id": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+                    },
+                    "name": {
+                      "type": "string",
+                      "value": "[variables('storage').name]"
+                    },
+                    "connectionString": {
+                      "type": "string",
+                      "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', variables('storage').name, environment().suffixes.storage, listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storage').name), '2021-06-01').keys[0].value)]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "LogicApp",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.9.1.41621",
+                      "templateHash": "5212093654973328436"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    }
+                  },
+                  "variables": {
+                    "logicApp": {
+                      "name": "[format('logapp-{0}', parameters('name'))]",
+                      "location": "[parameters('location')]"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Logic/workflows",
+                      "apiVersion": "2019-05-01",
+                      "name": "[variables('logicApp').name]",
+                      "location": "[variables('logicApp').location]",
+                      "properties": {
+                        "state": "Enabled",
+                        "definition": {
+                          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                          "contentVersion": "1.0.0.0",
+                          "parameters": {},
+                          "triggers": {
+                            "manual": {
+                              "type": "Request",
+                              "kind": "Http",
+                              "inputs": {
+                                "method": "POST",
+                                "schema": {}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "id": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.Logic/workflows', variables('logicApp').name)]"
+                    },
+                    "name": {
+                      "type": "string",
+                      "value": "[variables('logicApp').name]"
+                    },
+                    "endpoint": {
+                      "type": "string",
+                      "value": "[listCallbackUrl(format('{0}/triggers/manual', resourceId('Microsoft.Logic/workflows', variables('logicApp').name)), '2019-05-01').value]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "EventGridTopic",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.9.1.41621",
+                      "templateHash": "4274507542350349242"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    }
+                  },
+                  "variables": {
+                    "eventGrid": {
+                      "name": "[format('evtgrd-{0}-topic', parameters('name'))]",
+                      "location": "[parameters('location')]"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.EventGrid/topics",
+                      "apiVersion": "2022-06-15",
+                      "name": "[variables('eventGrid').name]",
+                      "location": "[variables('eventGrid').location]",
+                      "properties": {
+                        "inputSchema": "CloudEventSchemaV1_0"
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "id": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.EventGrid/topics', variables('eventGrid').name)]"
+                    },
+                    "name": {
+                      "type": "string",
+                      "value": "[variables('eventGrid').name]"
+                    },
+                    "endpoint": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.EventGrid/topics', variables('eventGrid').name), '2022-06-15').endpoint]"
+                    },
+                    "accessKey": {
+                      "type": "string",
+                      "value": "[listKeys(resourceId('Microsoft.EventGrid/topics', variables('eventGrid').name), '2022-06-15').key1]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "EventGridSubscription",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "logicAppEndpointUrl": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'LogicApp')).outputs.endpoint.value]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.9.1.41621",
+                      "templateHash": "7466928527562710711"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    },
+                    "logicAppEndpointUrl": {
+                      "type": "secureString"
+                    }
+                  },
+                  "variables": {
+                    "logicApp": {
+                      "endpointUrl": "[parameters('logicAppEndpointUrl')]"
+                    },
+                    "eventGrid": {
+                      "topicName": "[format('evtgrd-{0}-topic', parameters('name'))]",
+                      "subName": "[format('evtgrd-{0}-sub', parameters('name'))]",
+                      "location": "[parameters('location')]"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.EventGrid/eventSubscriptions",
+                      "apiVersion": "2022-06-15",
+                      "scope": "[format('Microsoft.EventGrid/topics/{0}', variables('eventGrid').topicName)]",
+                      "name": "[variables('eventGrid').subName]",
+                      "properties": {
+                        "eventDeliverySchema": "CloudEventSchemaV1_0",
+                        "destination": {
+                          "endpointType": "WebHook",
+                          "properties": {
+                            "endpointUrl": "[variables('logicApp').endpointUrl]"
+                          }
+                        },
+                        "filter": {
+                          "includedEventTypes": null
+                        }
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "id": {
+                      "type": "string",
+                      "value": "[extensionResourceId(resourceId('Microsoft.EventGrid/topics', variables('eventGrid').topicName), 'Microsoft.EventGrid/eventSubscriptions', variables('eventGrid').subName)]"
+                    },
+                    "name": {
+                      "type": "string",
+                      "value": "[variables('eventGrid').subName]"
+                    }
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'EventGridTopic')]",
+                "[resourceId('Microsoft.Resources/deployments', 'LogicApp')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "LogAnalyticsWorkspace",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.9.1.41621",
+                      "templateHash": "3448718705695124988"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    }
+                  },
+                  "variables": {
+                    "workspace": {
+                      "name": "[format('wrkspc-{0}', parameters('name'))]",
+                      "location": "[parameters('location')]"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.OperationalInsights/workspaces",
+                      "apiVersion": "2021-06-01",
+                      "name": "[variables('workspace').name]",
+                      "location": "[variables('workspace').location]",
+                      "properties": {
+                        "sku": {
+                          "name": "PerGB2018"
+                        },
+                        "retentionInDays": 30,
+                        "workspaceCapping": {
+                          "dailyQuotaGb": -1
+                        },
+                        "publicNetworkAccessForIngestion": "Enabled",
+                        "publicNetworkAccessForQuery": "Enabled"
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "id": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspace').name)]"
+                    },
+                    "name": {
+                      "type": "string",
+                      "value": "[variables('workspace').name]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "ApplicationInsights",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "workspaceId": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'LogAnalyticsWorkspace')).outputs.id.value]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.9.1.41621",
+                      "templateHash": "7872752548019562034"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    },
+                    "workspaceId": {
+                      "type": "string"
+                    }
+                  },
+                  "variables": {
+                    "workspace": {
+                      "id": "[parameters('workspaceId')]"
+                    },
+                    "appInsights": {
+                      "name": "[format('appins-{0}', parameters('name'))]",
+                      "location": "[parameters('location')]"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Insights/components",
+                      "apiVersion": "2020-02-02",
+                      "name": "[variables('appInsights').name]",
+                      "location": "[variables('appInsights').location]",
+                      "kind": "web",
+                      "properties": {
+                        "Application_Type": "web",
+                        "Flow_Type": "Bluefield",
+                        "IngestionMode": "LogAnalytics",
+                        "Request_Source": "rest",
+                        "WorkspaceResourceId": "[variables('workspace').id]"
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "id": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.Insights/components', variables('appInsights').name)]"
+                    },
+                    "name": {
+                      "type": "string",
+                      "value": "[variables('appInsights').name]"
+                    },
+                    "instrumentationKey": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsights').name)).InstrumentationKey]"
+                    },
+                    "connectionString": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsights').name)).ConnectionString]"
+                    }
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'LogAnalyticsWorkspace')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "ConsumptionPlan",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.9.1.41621",
+                      "templateHash": "7655584872176297662"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    }
+                  },
+                  "variables": {
+                    "consumption": {
+                      "name": "[format('csplan-{0}', parameters('name'))]",
+                      "location": "[parameters('location')]"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Web/serverfarms",
+                      "apiVersion": "2022-03-01",
+                      "name": "[variables('consumption').name]",
+                      "location": "[variables('consumption').location]",
+                      "kind": "functionApp",
+                      "sku": {
+                        "name": "Y1",
+                        "tier": "Dynamic"
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "id": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.Web/serverfarms', variables('consumption').name)]"
+                    },
+                    "name": {
+                      "type": "string",
+                      "value": "[variables('consumption').name]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "FunctionApp",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "storageAccountConnectionString": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'StorageAccount')).outputs.connectionString.value]"
+                  },
+                  "appInsightsInstrumentationKey": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ApplicationInsights')).outputs.instrumentationKey.value]"
+                  },
+                  "appInsightsConnectionString": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ApplicationInsights')).outputs.connectionString.value]"
+                  },
+                  "consumptionPlanId": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ConsumptionPlan')).outputs.id.value]"
+                  },
+                  "eventGridTopicEndpoint": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'EventGridTopic')).outputs.endpoint.value]"
+                  },
+                  "eventGridTopicAccessKey": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'EventGridTopic')).outputs.accessKey.value]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.9.1.41621",
+                      "templateHash": "11024539561006568788"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    },
+                    "storageAccountConnectionString": {
+                      "type": "secureString"
+                    },
+                    "consumptionPlanId": {
+                      "type": "string"
+                    },
+                    "appInsightsInstrumentationKey": {
+                      "type": "secureString"
+                    },
+                    "appInsightsConnectionString": {
+                      "type": "secureString"
+                    },
+                    "eventGridTopicEndpoint": {
+                      "type": "string"
+                    },
+                    "eventGridTopicAccessKey": {
+                      "type": "secureString"
+                    }
+                  },
+                  "variables": {
+                    "storage": {
+                      "connectionString": "[parameters('storageAccountConnectionString')]"
+                    },
+                    "consumption": {
+                      "id": "[parameters('consumptionPlanId')]"
+                    },
+                    "appInsights": {
+                      "instrumentationKey": "[parameters('appInsightsInstrumentationKey')]",
+                      "connectionString": "[parameters('appInsightsConnectionString')]"
+                    },
+                    "eventGrid": {
+                      "topicEndpoint": "[parameters('eventGridTopicEndpoint')]",
+                      "topicAccessKey": "[parameters('eventGridTopicAccessKey')]"
+                    },
+                    "functionApp": {
+                      "name": "[format('fncapp-{0}', parameters('name'))]",
+                      "location": "[parameters('location')]"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Web/sites",
+                      "apiVersion": "2022-03-01",
+                      "name": "[variables('functionApp').name]",
+                      "location": "[variables('functionApp').location]",
+                      "kind": "functionapp",
+                      "properties": {
+                        "serverFarmId": "[variables('consumption').id]",
+                        "httpsOnly": true,
+                        "siteConfig": {
+                          "appSettings": [
+                            {
+                              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                              "value": "[variables('appInsights').instrumentationKey]"
+                            },
+                            {
+                              "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                              "value": "[variables('appInsights').connectionString]"
+                            },
+                            {
+                              "name": "AzureWebJobsStorage",
+                              "value": "[variables('storage').connectionString]"
+                            },
+                            {
+                              "name": "FUNCTION_APP_EDIT_MODE",
+                              "value": "readonly"
+                            },
+                            {
+                              "name": "FUNCTIONS_EXTENSION_VERSION",
+                              "value": "~4"
+                            },
+                            {
+                              "name": "FUNCTIONS_WORKER_RUNTIME",
+                              "value": "dotnet"
+                            },
+                            {
+                              "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                              "value": "[variables('storage').connectionString]"
+                            },
+                            {
+                              "name": "WEBSITE_CONTENTSHARE",
+                              "value": "[variables('functionApp').name]"
+                            },
+                            {
+                              "name": "OpenApi__Version",
+                              "value": "v3"
+                            },
+                            {
+                              "name": "OpenApi__HostNames",
+                              "value": "[format('https://{0}.azurewebsites.net/api', variables('functionApp').name)]"
+                            },
+                            {
+                              "name": "EventGrid__Topic__Endpoint",
+                              "value": "[variables('eventGrid').topicEndpoint]"
+                            },
+                            {
+                              "name": "EventGrid__Topic__AccessKey",
+                              "value": "[variables('eventGrid').topicAccessKey]"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "id": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.Web/sites', variables('functionApp').name)]"
+                    },
+                    "name": {
+                      "type": "string",
+                      "value": "[variables('functionApp').name]"
+                    }
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'ApplicationInsights')]",
+                "[resourceId('Microsoft.Resources/deployments', 'ConsumptionPlan')]",
+                "[resourceId('Microsoft.Resources/deployments', 'EventGridTopic')]",
+                "[resourceId('Microsoft.Resources/deployments', 'StorageAccount')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "DeploymentScript",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "gitHubBranchName": {
+                    "value": "[parameters('gitHubBranchName')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.9.1.41621",
+                      "templateHash": "8001552418830947820"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    },
+                    "gitHubBranchName": {
+                      "type": "string",
+                      "defaultValue": "main"
+                    }
+                  },
+                  "variables": {
+                    "userAssignedIdentity": {
+                      "name": "[format('spn-{0}', parameters('name'))]",
+                      "location": "[parameters('location')]"
+                    },
+                    "roleAssignment": {
+                      "name": "[guid(resourceGroup().id, 'contributor')]",
+                      "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+                      "principalType": "ServicePrincipal"
+                    },
+                    "deploymentScript": {
+                      "name": "[format('depscrpt-{0}', parameters('name'))]",
+                      "location": "[parameters('location')]",
+                      "resourceName": "[parameters('name')]",
+                      "containerGroupName": "[format('contgrp-{0}', parameters('name'))]",
+                      "azureCliVersion": "2.37.0",
+                      "scriptUri": "[format('https://raw.githubusercontent.com/justinyoo/azure-event-grid-cloudevents-sample/{0}/Resources/setup-resources.sh', parameters('gitHubBranchName'))]",
+                      "gitHubBranchName": "[parameters('gitHubBranchName')]"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+                      "apiVersion": "2022-01-31-preview",
+                      "name": "[variables('userAssignedIdentity').name]",
+                      "location": "[variables('userAssignedIdentity').location]"
+                    },
+                    {
+                      "type": "Microsoft.Authorization/roleAssignments",
+                      "apiVersion": "2022-04-01",
+                      "name": "[variables('roleAssignment').name]",
+                      "properties": {
+                        "roleDefinitionId": "[variables('roleAssignment').roleDefinitionId]",
+                        "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIdentity').name)).principalId]",
+                        "principalType": "[variables('roleAssignment').principalType]"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIdentity').name)]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Resources/deploymentScripts",
+                      "apiVersion": "2020-10-01",
+                      "name": "[variables('deploymentScript').name]",
+                      "location": "[variables('deploymentScript').location]",
+                      "kind": "AzureCLI",
+                      "identity": {
+                        "type": "UserAssigned",
+                        "userAssignedIdentities": {
+                          "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIdentity').name))]": {}
+                        }
+                      },
+                      "properties": {
+                        "azCliVersion": "[variables('deploymentScript').azureCliVersion]",
+                        "containerSettings": {
+                          "containerGroupName": "[variables('deploymentScript').containerGroupName]"
+                        },
+                        "environmentVariables": [
+                          {
+                            "name": "AZ_RESOURCE_NAME",
+                            "value": "[variables('deploymentScript').resourceName]"
+                          },
+                          {
+                            "name": "GH_BRANCH_NAME",
+                            "value": "[variables('deploymentScript').gitHubBranchName]"
+                          }
+                        ],
+                        "primaryScriptUri": "[variables('deploymentScript').scriptUri]",
+                        "cleanupPreference": "OnExpiration",
+                        "retentionInterval": "P1D"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Authorization/roleAssignments', variables('roleAssignment').name)]",
+                        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIdentity').name)]"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'FunctionApp')]"
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', format('rg-{0}', parameters('name')))]"
+      ]
+    }
+  ]
+}

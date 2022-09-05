@@ -1,0 +1,10 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+
+    "EventGrid__Topic__Endpoint": "<Azure Event Grid Custom Topic Endpoint URL>",
+    "EventGrid__Topic__AccessKey": "<Azure Event Grid Custom Topic Access Key>"
+  }
+}
