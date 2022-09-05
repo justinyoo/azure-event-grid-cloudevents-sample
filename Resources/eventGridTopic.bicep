@@ -16,5 +16,5 @@ resource evtgrd 'Microsoft.EventGrid/topics@2022-06-15' = {
 
 output id string = evtgrd.id
 output name string = evtgrd.name
-output endpoint string = reference(evtgrd.id, '2022-06-15').properties.endpoint
+output endpoint string = reference(evtgrd.id, '2022-06-15').endpoint
 output accessKey string = listKeys(evtgrd.id, '2022-06-15').key1
