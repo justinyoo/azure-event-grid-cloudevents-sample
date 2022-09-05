@@ -3,7 +3,7 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Resolvers;
 
 using Newtonsoft.Json.Serialization;
 
-namespace EventPublisher
+namespace EventPublisher.Models
 {
     public class MyEventData
     {
@@ -24,7 +24,7 @@ namespace EventPublisher
                 Lorem = "Ipsum"
             };
 
-            this.Examples.Add(
+            Examples.Add(
                 OpenApiExampleResolver.Resolve(
                     "sample",
                     "This represents the sample entity",
