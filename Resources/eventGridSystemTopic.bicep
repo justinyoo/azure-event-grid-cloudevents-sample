@@ -2,7 +2,7 @@ param name string
 param location string = resourceGroup().location
 
 param resourceId string
-param resourceType string = 'Microsoft.KeyVault/vaults'
+param resourceType string = 'Microsoft.KeyVault.vaults'
 
 var eventGrid = {
   name: 'evtgrd-${name}-topic-system'

@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.9.1.41621",
-      "templateHash": "1149295650649863689"
+      "templateHash": "6935165415275534675"
     }
   },
   "parameters": {
@@ -56,7 +56,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.9.1.41621",
-              "templateHash": "68855528354588082"
+              "templateHash": "8792373765509278581"
             }
           },
           "parameters": {
@@ -327,7 +327,7 @@
                     "value": "[reference(resourceId('Microsoft.Resources/deployments', 'KeyVault')).outputs.id.value]"
                   },
                   "resourceType": {
-                    "value": "Microsoft.KeyVault/vaults"
+                    "value": "Microsoft.KeyVault.vaults"
                   }
                 },
                 "template": {
@@ -337,7 +337,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.9.1.41621",
-                      "templateHash": "5837347752540636534"
+                      "templateHash": "8552370314694780321"
                     }
                   },
                   "parameters": {
@@ -353,7 +353,7 @@
                     },
                     "resourceType": {
                       "type": "string",
-                      "defaultValue": "Microsoft.KeyVault/vaults"
+                      "defaultValue": "Microsoft.KeyVault.vaults"
                     }
                   },
                   "variables": {

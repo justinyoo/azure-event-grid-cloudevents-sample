@@ -33,7 +33,7 @@ module evtgrdSysTopic './eventGridSystemTopic.bicep' = {
     name: name
     location: location
     resourceId: kv.outputs.id
-    resourceType: 'Microsoft.KeyVault/vaults'
+    resourceType: 'Microsoft.KeyVault.vaults'
   }
 }
 
