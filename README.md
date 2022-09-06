@@ -7,7 +7,7 @@ This provides a sample [Azure Functions](https://docs.microsoft.com/azure/azure-
 
 1. Click the button below to autopilot all instances and apps on Azure. Make sure that you don't forget the app name you give.
 
-    [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fjustinyoo%2Fazure-event-grid-cloudevents-sample%2Ffeature%2Fkv%2FResources%2Fazuredeploy.json)
+    [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fjustinyoo%2Fazure-event-grid-cloudevents-sample%2Fmain%2FResources%2Fazuredeploy.json)
 
 2. Visit the following URL to check whether all the apps have been properly provisioned and deployed.
 
