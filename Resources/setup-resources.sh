@@ -8,12 +8,12 @@ urls=$(curl -H "Accept: application/vnd.github.v3+json" \
 
 resource_group="rg-$AZ_RESOURCE_NAME"
 
-# Deploy function apps
+# Deploy Function app
 fncapp_name="fncapp-$AZ_RESOURCE_NAME"
 fncapp_zip=$(echo $urls | jq --argjson value 0 '.[$value]' -r)
 fncapp=$(az functionapp deploy -g $resource_group -n $fncapp_name --src-url $fncapp_zip --type zip)
 
-# Set KeyValut access policy - secrets
+# Set Key Valut access policy - secrets
 user_object_id=$(az ad user show --id "$AZ_UPN" --query id -o tsv)
 kv_name="kv-$AZ_RESOURCE_NAME"
 kv=$(az keyvault set-policy -g $resource_group -n $kv_name --object-id $user_object_id --secret-permissions all)
