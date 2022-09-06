@@ -33,6 +33,7 @@ if ($needHelp -eq $true) {
     Exit 0
 }
 
+# List soft-deleted Key Vaults
 function List-DeletedKeyVaults {
     param (
         [string] $ApiVersion
@@ -70,32 +71,7 @@ function List-DeletedKeyVaults {
     return $returnValue
 }
 
-# $account = $(az account show | ConvertFrom-Json)
-
-# $url = "https://management.azure.com/subscriptions/$($account.id)/providers/Microsoft.KeyVault/deletedVaults?api-version=$($ApiVersion)"
-
-# # Uncomment to debug
-# # $url
-
-# $kvs = $(az rest -m get -u $url --query "value" | ConvertFrom-Json)
-# if ($kvs -eq $null) {
-#     Write-Output "No soft-deleted KeyVault instance found to purge"
-#     Exit 0
-# }
-
-# $options = ""
-# if ($kvs.Count -eq 1) {
-#     $name = $kvs.name
-#     $options += "    1: $name `n"
-# } else {
-#     $kvs | ForEach-Object {
-#         $i = $kvs.IndexOf($_)
-#         $name = $_.name
-#         $options += "    $($i +1): $name `n"
-#     }
-# }
-# $options += "    q: Quit`n"
-
+# Purge soft-deleted Key Vaults
 function Purge-DeletedKeyVaults {
     param (
         [string] $ApiVersion
@@ -122,6 +98,7 @@ function Purge-DeletedKeyVaults {
             break
         }
 
+        $kvs = $result.kvs
         if ($parsed -gt $kvs.Count) {
             Write-Output "Invalid input"
             $continue = $false
@@ -148,67 +125,8 @@ function Purge-DeletedKeyVaults {
     }
 
     if ($continue -eq $false) {
-        return $result.options
+        return "`n$result.options"
     }
-
-    # while (condition) {
-    #     $input = Read-Host "Select the number to purge the soft-deleted KeyVault instance or 'q' to quit: `n`n$options"
-    #     if ($input -eq "q") {
-    #         $continue = $false
-    #     }
-    #     $parsed = $input -as [int]
-    #     if ($parsed -eq $null) {
-    #         Write-Output "Invalid input"
-    #         $continue = $false
-    #     }
-    #     if ($parsed -gt $kvs.Count) {
-    #         Write-Output "Invalid input"
-    #         $continue = $false
-    #     }
-    #     $index = $parsed - 1
-        
-    #     $url = "https://management.azure.com$($kvs[$index].id)?api-version=$($ApiVersion)"
-        
-    #     # Uncomment to debug
-    #     # $url
-        
-    #     $kv = $(az rest -m get -u $url)
-    #     if ($kv -ne $null) {
-    #         $url = "https://management.azure.com$($kvs[$index].id)/purge?api-version=$($ApiVersion)"
-    #         $deleted = $(az rest -m post -u $url)
-    #     }
-
-    #     $options = List-DeletedKeyVaults -ApiVersion $ApiVersion
-    #     if ($options -eq "") {
-    #         $continue = $false
-    #     }
-    # }
 }
-
-# $input = Read-Host "Select the number to purge the soft-deleted KeyVault instance or 'q' to quit: `n`n$options"
-# if ($input -eq "q") {
-#     Exit 0
-# }
-# $parsed = $input -as [int]
-# if ($parsed -eq $null) {
-#     Write-Output "Invalid input"
-#     Exit 0
-# }
-# if ($parsed -gt $kvs.Count) {
-#     Write-Output "Invalid input"
-#     Exit 0
-# }
-# $index = $parsed - 1
-
-# $url = "https://management.azure.com$($kvs[$index].id)?api-version=$($ApiVersion)"
-
-# # Uncomment to debug
-# # $url
-
-# $kv = $(az rest -m get -u $url)
-# if ($kv -ne $null) {
-#     $url = "https://management.azure.com$($kvs[$index].id)/purge?api-version=$($ApiVersion)"
-#     $deleted = $(az rest -m post -u $url)
-# }
 
 Purge-DeletedKeyVaults -ApiVersion $ApiVersion
