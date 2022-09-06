@@ -15,13 +15,13 @@ var eventGrid = {
   location: location
 }
 
-resource topic 'Microsoft.EventGrid/topics@2022-06-15' existing = {
+resource topic 'Microsoft.EventGrid/systemTopics@2022-06-15' existing = {
   name: eventGrid.topicName
 }
 
-resource evtgrd 'Microsoft.EventGrid/eventSubscriptions@2022-06-15' = {
+resource evtgrd 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2022-06-15' = {
   name: eventGrid.subName
-  scope: topic
+  parent: topic
   properties: {
     eventDeliverySchema: 'CloudEventSchemaV1_0'
     destination: {

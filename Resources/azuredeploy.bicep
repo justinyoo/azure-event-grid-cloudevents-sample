@@ -3,6 +3,7 @@ targetScope = 'subscription'
 param name string
 param location string = 'Korea Central'
 
+// param userPrincipalName string
 param gitHubBranchName string = 'main'
 
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
@@ -16,6 +17,7 @@ module resources './main.bicep' = {
     params: {
         name: name
         location: location
+        // userPrincipalName: userPrincipalName
         gitHubBranchName: gitHubBranchName
     }
 }

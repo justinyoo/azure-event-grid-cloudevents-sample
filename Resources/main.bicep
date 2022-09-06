@@ -1,6 +1,7 @@
 param name string
 param location string = resourceGroup().location
 
+// param userPrincipalName string
 param gitHubBranchName string = 'main'
 
 module st './storageAccount.bicep' = {
@@ -19,6 +20,34 @@ module logapp 'logicApp.bicep' = {
   }
 }
 
+module kv './keyVault.bicep' = {
+  name: 'KeyVault'
+  params: {
+    name: name
+    location: location
+  }
+}
+
+module evtgrdSysTopic './eventGridSystemTopic.bicep' = {
+  name: 'EventGridSystemTopic'
+  params: {
+    name: name
+    location: location
+    resourceId: kv.outputs.id
+    resourceType: 'Microsoft.KeyVault.vaults'
+  }
+}
+
+module evtgrdSysSub './eventGridSystemSubscription.bicep' = {
+  name: 'EventGridSystemSubscription'
+  params: {
+    name: name
+    location: location
+    eventGridTopicName: evtgrdSysTopic.outputs.name
+    logicAppEndpointUrl: logapp.outputs.endpoint
+  }
+}
+
 module evtgrdTopic './eventGridTopic.bicep' = {
   name: 'EventGridTopic'
   params: {
@@ -27,7 +56,7 @@ module evtgrdTopic './eventGridTopic.bicep' = {
   }
 }
 
-module evtgrdSub 'eventGridSubscription.bicep' = {
+module evtgrdSub './eventGridSubscription.bicep' = {
   name: 'EventGridSubscription'
   dependsOn: [
     evtgrdTopic
@@ -35,6 +64,7 @@ module evtgrdSub 'eventGridSubscription.bicep' = {
   params: {
     name: name
     location: location
+    eventGridTopicName: evtgrdTopic.outputs.name
     logicAppEndpointUrl: logapp.outputs.endpoint
   }
 }
@@ -86,6 +116,7 @@ module depscrpt './deploymentScript.bicep' = {
     params: {
         name: name
         location: location
+        // userPrincipalName: userPrincipalName
         gitHubBranchName: gitHubBranchName
     }
 }
