@@ -3,7 +3,6 @@ targetScope = 'subscription'
 param name string
 param location string = 'Korea Central'
 
-@secure()
 param userPrincipalName string
 param gitHubBranchName string = 'main'
 

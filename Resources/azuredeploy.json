@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.9.1.41621",
-      "templateHash": "8482468681489804529"
+      "templateHash": "15222145130797359476"
     }
   },
   "parameters": {
@@ -17,7 +17,7 @@
       "defaultValue": "Korea Central"
     },
     "userPrincipalName": {
-      "type": "secureString"
+      "type": "string"
     },
     "gitHubBranchName": {
       "type": "string",
@@ -62,7 +62,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.9.1.41621",
-              "templateHash": "2252073448082455512"
+              "templateHash": "16788680736840823904"
             }
           },
           "parameters": {
@@ -74,7 +74,7 @@
               "defaultValue": "[resourceGroup().location]"
             },
             "userPrincipalName": {
-              "type": "secureString"
+              "type": "string"
             },
             "gitHubBranchName": {
               "type": "string",
@@ -1103,7 +1103,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.9.1.41621",
-                      "templateHash": "12633904688231989004"
+                      "templateHash": "6059183425384811447"
                     }
                   },
                   "parameters": {
@@ -1115,7 +1115,7 @@
                       "defaultValue": "[resourceGroup().location]"
                     },
                     "userPrincipalName": {
-                      "type": "secureString"
+                      "type": "string"
                     },
                     "gitHubBranchName": {
                       "type": "string",

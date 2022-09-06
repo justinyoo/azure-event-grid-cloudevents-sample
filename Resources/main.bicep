@@ -1,7 +1,6 @@
 param name string
 param location string = resourceGroup().location
 
-@secure()
 param userPrincipalName string
 param gitHubBranchName string = 'main'
 
