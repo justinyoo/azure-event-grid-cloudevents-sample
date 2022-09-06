@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.9.1.41621",
-      "templateHash": "16660290946557367252"
+      "templateHash": "8482468681489804529"
     }
   },
   "parameters": {
@@ -15,6 +15,9 @@
     "location": {
       "type": "string",
       "defaultValue": "Korea Central"
+    },
+    "userPrincipalName": {
+      "type": "secureString"
     },
     "gitHubBranchName": {
       "type": "string",
@@ -45,6 +48,9 @@
           "location": {
             "value": "[parameters('location')]"
           },
+          "userPrincipalName": {
+            "value": "[parameters('userPrincipalName')]"
+          },
           "gitHubBranchName": {
             "value": "[parameters('gitHubBranchName')]"
           }
@@ -56,7 +62,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.9.1.41621",
-              "templateHash": "13047700173420446935"
+              "templateHash": "2252073448082455512"
             }
           },
           "parameters": {
@@ -66,6 +72,9 @@
             "location": {
               "type": "string",
               "defaultValue": "[resourceGroup().location]"
+            },
+            "userPrincipalName": {
+              "type": "secureString"
             },
             "gitHubBranchName": {
               "type": "string",
@@ -1080,6 +1089,9 @@
                   "location": {
                     "value": "[parameters('location')]"
                   },
+                  "userPrincipalName": {
+                    "value": "[parameters('userPrincipalName')]"
+                  },
                   "gitHubBranchName": {
                     "value": "[parameters('gitHubBranchName')]"
                   }
@@ -1091,7 +1103,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.9.1.41621",
-                      "templateHash": "8001552418830947820"
+                      "templateHash": "12633904688231989004"
                     }
                   },
                   "parameters": {
@@ -1101,6 +1113,9 @@
                     "location": {
                       "type": "string",
                       "defaultValue": "[resourceGroup().location]"
+                    },
+                    "userPrincipalName": {
+                      "type": "secureString"
                     },
                     "gitHubBranchName": {
                       "type": "string",
@@ -1121,10 +1136,11 @@
                       "name": "[format('depscrpt-{0}', parameters('name'))]",
                       "location": "[parameters('location')]",
                       "resourceName": "[parameters('name')]",
+                      "userPrincipalName": "[parameters('userPrincipalName')]",
+                      "gitHubBranchName": "[parameters('gitHubBranchName')]",
                       "containerGroupName": "[format('contgrp-{0}', parameters('name'))]",
                       "azureCliVersion": "2.37.0",
-                      "scriptUri": "[format('https://raw.githubusercontent.com/justinyoo/azure-event-grid-cloudevents-sample/{0}/Resources/setup-resources.sh', parameters('gitHubBranchName'))]",
-                      "gitHubBranchName": "[parameters('gitHubBranchName')]"
+                      "scriptUri": "[format('https://raw.githubusercontent.com/justinyoo/azure-event-grid-cloudevents-sample/{0}/Resources/setup-resources.sh', parameters('gitHubBranchName'))]"
                     }
                   },
                   "resources": [
@@ -1168,6 +1184,10 @@
                           {
                             "name": "AZ_RESOURCE_NAME",
                             "value": "[variables('deploymentScript').resourceName]"
+                          },
+                          {
+                            "name": "AZ_UPN",
+                            "value": "[variables('deploymentScript').userPrincipalName]"
                           },
                           {
                             "name": "GH_BRANCH_NAME",
