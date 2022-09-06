@@ -19,23 +19,57 @@ module logapp 'logicApp.bicep' = {
   }
 }
 
-module evtgrdTopic './eventGridTopic.bicep' = {
-  name: 'EventGridTopic'
+module kv './keyVault.bicep' = {
+  name: 'KeyVault'
   params: {
     name: name
     location: location
   }
 }
 
-module evtgrdSub 'eventGridSubscription.bicep' = {
-  name: 'EventGridSubscription'
+module evtgrdSysTopic './eventGridSystemTopic.bicep' = {
+  name: 'EventGridSystemTopic'
+  params: {
+    name: name
+    location: location
+    resourceId: kv.outputs.id
+    resourceType: 'Microsoft.KeyVault/vaults'
+  }
+}
+
+module evtgrdSysSub 'eventGridSubscription.bicep' = {
+  name: 'EventGridSystemSubscription'
   dependsOn: [
-    evtgrdTopic
+    evtgrdCusTopic
   ]
   params: {
     name: name
     location: location
     logicAppEndpointUrl: logapp.outputs.endpoint
+    eventGridTopicName: evtgrdSysTopic.outputs.name
+    eventGridTopicType: 'system'
+  }
+}
+
+module evtgrdCusTopic './eventGridTopic.bicep' = {
+  name: 'EventGridCustomTopic'
+  params: {
+    name: name
+    location: location
+  }
+}
+
+module evtgrdCusSub 'eventGridSubscription.bicep' = {
+  name: 'EventGridCustomSubscription'
+  dependsOn: [
+    evtgrdCusTopic
+  ]
+  params: {
+    name: name
+    location: location
+    logicAppEndpointUrl: logapp.outputs.endpoint
+    eventGridTopicName: evtgrdCusTopic.outputs.name
+    eventGridTopicType: 'custom'
   }
 }
 
@@ -73,8 +107,8 @@ module fncapp './functionApp.bicep' = {
     appInsightsInstrumentationKey: appins.outputs.instrumentationKey
     appInsightsConnectionString: appins.outputs.connectionString
     consumptionPlanId: csplan.outputs.id
-    eventGridTopicEndpoint: evtgrdTopic.outputs.endpoint
-    eventGridTopicAccessKey: evtgrdTopic.outputs.accessKey
+    eventGridTopicEndpoint: evtgrdCusTopic.outputs.endpoint
+    eventGridTopicAccessKey: evtgrdCusTopic.outputs.accessKey
   }
 }
 

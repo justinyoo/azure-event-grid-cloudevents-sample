@@ -2,7 +2,7 @@ param name string
 param location string = resourceGroup().location
 
 var eventGrid = {
-  name: 'evtgrd-${name}-topic'
+  name: 'evtgrd-${name}-topic-custom'
   location: location
 }
 
