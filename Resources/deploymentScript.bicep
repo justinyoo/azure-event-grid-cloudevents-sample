@@ -1,7 +1,7 @@
 param name string
 param location string = resourceGroup().location
 
-param userPrincipalName string
+// param userPrincipalName string
 param gitHubBranchName string = 'main'
 
 var userAssignedIdentity = {
@@ -34,7 +34,7 @@ var deploymentScript = {
     name: 'depscrpt-${name}'
     location: location
     resourceName: name
-    userPrincipalName: userPrincipalName
+    // userPrincipalName: userPrincipalName
     gitHubBranchName: gitHubBranchName
     containerGroupName: 'contgrp-${name}'
     azureCliVersion: '2.37.0'
@@ -64,10 +64,10 @@ resource ds 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
                 name: 'AZ_RESOURCE_NAME'
                 value: deploymentScript.resourceName
             }
-            {
-                name: 'AZ_UPN'
-                value: deploymentScript.userPrincipalName
-            }
+            // {
+            //     name: 'AZ_UPN'
+            //     value: deploymentScript.userPrincipalName
+            // }
             {
                 name: 'GH_BRANCH_NAME'
                 value: deploymentScript.gitHubBranchName

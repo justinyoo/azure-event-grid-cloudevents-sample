@@ -1,7 +1,7 @@
 param name string
 param location string = resourceGroup().location
 
-param userPrincipalName string
+// param userPrincipalName string
 param gitHubBranchName string = 'main'
 
 module st './storageAccount.bicep' = {
@@ -116,7 +116,7 @@ module depscrpt './deploymentScript.bicep' = {
     params: {
         name: name
         location: location
-        userPrincipalName: userPrincipalName
+        // userPrincipalName: userPrincipalName
         gitHubBranchName: gitHubBranchName
     }
 }
