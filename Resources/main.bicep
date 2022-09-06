@@ -37,39 +37,34 @@ module evtgrdSysTopic './eventGridSystemTopic.bicep' = {
   }
 }
 
-module evtgrdSysSub 'eventGridSubscription.bicep' = {
+module evtgrdSysSub './eventGridSystemSubscription.bicep' = {
   name: 'EventGridSystemSubscription'
-  dependsOn: [
-    evtgrdCusTopic
-  ]
   params: {
     name: name
     location: location
-    logicAppEndpointUrl: logapp.outputs.endpoint
     eventGridTopicName: evtgrdSysTopic.outputs.name
-    eventGridTopicType: 'system'
+    logicAppEndpointUrl: logapp.outputs.endpoint
   }
 }
 
-module evtgrdCusTopic './eventGridTopic.bicep' = {
-  name: 'EventGridCustomTopic'
+module evtgrdTopic './eventGridTopic.bicep' = {
+  name: 'EventGridTopic'
   params: {
     name: name
     location: location
   }
 }
 
-module evtgrdCusSub 'eventGridSubscription.bicep' = {
-  name: 'EventGridCustomSubscription'
+module evtgrdSub './eventGridSubscription.bicep' = {
+  name: 'EventGridSubscription'
   dependsOn: [
-    evtgrdCusTopic
+    evtgrdTopic
   ]
   params: {
     name: name
     location: location
+    eventGridTopicName: evtgrdTopic.outputs.name
     logicAppEndpointUrl: logapp.outputs.endpoint
-    eventGridTopicName: evtgrdCusTopic.outputs.name
-    eventGridTopicType: 'custom'
   }
 }
 
@@ -107,8 +102,8 @@ module fncapp './functionApp.bicep' = {
     appInsightsInstrumentationKey: appins.outputs.instrumentationKey
     appInsightsConnectionString: appins.outputs.connectionString
     consumptionPlanId: csplan.outputs.id
-    eventGridTopicEndpoint: evtgrdCusTopic.outputs.endpoint
-    eventGridTopicAccessKey: evtgrdCusTopic.outputs.accessKey
+    eventGridTopicEndpoint: evtgrdTopic.outputs.endpoint
+    eventGridTopicAccessKey: evtgrdTopic.outputs.accessKey
   }
 }
 

@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.9.1.41621",
-      "templateHash": "6935165415275534675"
+      "templateHash": "16660290946557367252"
     }
   },
   "parameters": {
@@ -56,7 +56,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.9.1.41621",
-              "templateHash": "8792373765509278581"
+              "templateHash": "13047700173420446935"
             }
           },
           "parameters": {
@@ -408,14 +408,11 @@
                   "location": {
                     "value": "[parameters('location')]"
                   },
-                  "logicAppEndpointUrl": {
-                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'LogicApp')).outputs.endpoint.value]"
-                  },
                   "eventGridTopicName": {
                     "value": "[reference(resourceId('Microsoft.Resources/deployments', 'EventGridSystemTopic')).outputs.name.value]"
                   },
-                  "eventGridTopicType": {
-                    "value": "system"
+                  "logicAppEndpointUrl": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'LogicApp')).outputs.endpoint.value]"
                   }
                 },
                 "template": {
@@ -425,7 +422,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.9.1.41621",
-                      "templateHash": "5519042494156558481"
+                      "templateHash": "10554143279050213364"
                     }
                   },
                   "parameters": {
@@ -439,14 +436,6 @@
                     "eventGridTopicName": {
                       "type": "string"
                     },
-                    "eventGridTopicType": {
-                      "type": "string",
-                      "defaultValue": "custom",
-                      "allowedValues": [
-                        "system",
-                        "custom"
-                      ]
-                    },
                     "logicAppEndpointUrl": {
                       "type": "secureString"
                     }
@@ -457,16 +446,15 @@
                     },
                     "eventGrid": {
                       "topicName": "[parameters('eventGridTopicName')]",
-                      "topicType": "[parameters('eventGridTopicType')]",
                       "subName": "[format('evtgrd-{0}-sub', parameters('name'))]",
                       "location": "[parameters('location')]"
                     }
                   },
                   "resources": [
                     {
-                      "type": "Microsoft.EventGrid/eventSubscriptions",
+                      "type": "Microsoft.EventGrid/systemTopics/eventSubscriptions",
                       "apiVersion": "2022-06-15",
-                      "name": "[variables('eventGrid').subName]",
+                      "name": "[format('{0}/{1}', variables('eventGrid').topicName, variables('eventGrid').subName)]",
                       "properties": {
                         "eventDeliverySchema": "CloudEventSchemaV1_0",
                         "destination": {
@@ -484,7 +472,7 @@
                   "outputs": {
                     "id": {
                       "type": "string",
-                      "value": "[resourceId('Microsoft.EventGrid/eventSubscriptions', variables('eventGrid').subName)]"
+                      "value": "[resourceId('Microsoft.EventGrid/systemTopics/eventSubscriptions', variables('eventGrid').topicName, variables('eventGrid').subName)]"
                     },
                     "name": {
                       "type": "string",
@@ -494,7 +482,6 @@
                 }
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', 'EventGridCustomTopic')]",
                 "[resourceId('Microsoft.Resources/deployments', 'EventGridSystemTopic')]",
                 "[resourceId('Microsoft.Resources/deployments', 'LogicApp')]"
               ]
@@ -502,7 +489,7 @@
             {
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
-              "name": "EventGridCustomTopic",
+              "name": "EventGridTopic",
               "properties": {
                 "expressionEvaluationOptions": {
                   "scope": "inner"
@@ -523,7 +510,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.9.1.41621",
-                      "templateHash": "13401569687518228376"
+                      "templateHash": "4274507542350349242"
                     }
                   },
                   "parameters": {
@@ -537,7 +524,7 @@
                   },
                   "variables": {
                     "eventGrid": {
-                      "name": "[format('evtgrd-{0}-topic-custom', parameters('name'))]",
+                      "name": "[format('evtgrd-{0}-topic', parameters('name'))]",
                       "location": "[parameters('location')]"
                     }
                   },
@@ -576,7 +563,7 @@
             {
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
-              "name": "EventGridCustomSubscription",
+              "name": "EventGridSubscription",
               "properties": {
                 "expressionEvaluationOptions": {
                   "scope": "inner"
@@ -589,14 +576,11 @@
                   "location": {
                     "value": "[parameters('location')]"
                   },
+                  "eventGridTopicName": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'EventGridTopic')).outputs.name.value]"
+                  },
                   "logicAppEndpointUrl": {
                     "value": "[reference(resourceId('Microsoft.Resources/deployments', 'LogicApp')).outputs.endpoint.value]"
-                  },
-                  "eventGridTopicName": {
-                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'EventGridCustomTopic')).outputs.name.value]"
-                  },
-                  "eventGridTopicType": {
-                    "value": "custom"
                   }
                 },
                 "template": {
@@ -606,7 +590,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.9.1.41621",
-                      "templateHash": "5519042494156558481"
+                      "templateHash": "18389695679029978926"
                     }
                   },
                   "parameters": {
@@ -620,14 +604,6 @@
                     "eventGridTopicName": {
                       "type": "string"
                     },
-                    "eventGridTopicType": {
-                      "type": "string",
-                      "defaultValue": "custom",
-                      "allowedValues": [
-                        "system",
-                        "custom"
-                      ]
-                    },
                     "logicAppEndpointUrl": {
                       "type": "secureString"
                     }
@@ -638,7 +614,6 @@
                     },
                     "eventGrid": {
                       "topicName": "[parameters('eventGridTopicName')]",
-                      "topicType": "[parameters('eventGridTopicType')]",
                       "subName": "[format('evtgrd-{0}-sub', parameters('name'))]",
                       "location": "[parameters('location')]"
                     }
@@ -647,6 +622,7 @@
                     {
                       "type": "Microsoft.EventGrid/eventSubscriptions",
                       "apiVersion": "2022-06-15",
+                      "scope": "[format('Microsoft.EventGrid/topics/{0}', variables('eventGrid').topicName)]",
                       "name": "[variables('eventGrid').subName]",
                       "properties": {
                         "eventDeliverySchema": "CloudEventSchemaV1_0",
@@ -665,7 +641,7 @@
                   "outputs": {
                     "id": {
                       "type": "string",
-                      "value": "[resourceId('Microsoft.EventGrid/eventSubscriptions', variables('eventGrid').subName)]"
+                      "value": "[extensionResourceId(resourceId('Microsoft.EventGrid/topics', variables('eventGrid').topicName), 'Microsoft.EventGrid/eventSubscriptions', variables('eventGrid').subName)]"
                     },
                     "name": {
                       "type": "string",
@@ -675,7 +651,7 @@
                 }
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', 'EventGridCustomTopic')]",
+                "[resourceId('Microsoft.Resources/deployments', 'EventGridTopic')]",
                 "[resourceId('Microsoft.Resources/deployments', 'LogicApp')]"
               ]
             },
@@ -941,10 +917,10 @@
                     "value": "[reference(resourceId('Microsoft.Resources/deployments', 'ConsumptionPlan')).outputs.id.value]"
                   },
                   "eventGridTopicEndpoint": {
-                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'EventGridCustomTopic')).outputs.endpoint.value]"
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'EventGridTopic')).outputs.endpoint.value]"
                   },
                   "eventGridTopicAccessKey": {
-                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'EventGridCustomTopic')).outputs.accessKey.value]"
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'EventGridTopic')).outputs.accessKey.value]"
                   }
                 },
                 "template": {
@@ -1084,7 +1060,7 @@
               "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', 'ApplicationInsights')]",
                 "[resourceId('Microsoft.Resources/deployments', 'ConsumptionPlan')]",
-                "[resourceId('Microsoft.Resources/deployments', 'EventGridCustomTopic')]",
+                "[resourceId('Microsoft.Resources/deployments', 'EventGridTopic')]",
                 "[resourceId('Microsoft.Resources/deployments', 'StorageAccount')]"
               ]
             },
