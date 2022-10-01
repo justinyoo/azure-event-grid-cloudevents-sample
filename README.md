@@ -19,6 +19,6 @@ This provides a sample [Azure Functions](https://docs.microsoft.com/azure/azure-
 
 ## More Readings ##
 
-* [#ServerlessSeptember: How to Consume CloudEvents via Azure Event Grid](https://azure.github.io/Cloud-Native/blog/to-be-announced)
+* [#ServerlessSeptember: How to Consume CloudEvents via Azure Event Grid](https://azure.github.io/Cloud-Native/blog/21-cloudevents-via-event-grid)
 * [30 Days of Serverless](https://azure.github.io/Cloud-Native/serverless-september/30DaysOfServerless)
 
