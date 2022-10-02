@@ -21,18 +21,19 @@ rm CascadiaCode.zip
 ## AZURE CLI EXTENSIONS ##
 # Uncomment the below to install Azure CLI extensions
 # extensions=$(az extension list-available --query "[].name" | jq -c -r '.[]')
-# for extension in $extensions;
-# do
-#     az extension add --name $extension
-# done
+extensions="account alias deploy-to-azure eventgrid functionapp logic subscription webapp"
+for extension in $extensions;
+do
+    az extension add --name $extension
+done
 
 ## AZURE BICEP CLI ##
 # Uncomment the below to install Azure Bicep CLI
-# az bicep install
+az bicep install
 
 ## AZURE FUNCTIONS CORE TOOLS ##
 # Uncomment the below to install Azure Functions Core Tools
-# npm i -g azure-functions-core-tools@4 --unsafe-perm true
+npm i -g azure-functions-core-tools@4 --unsafe-perm true
 
 ## AZURE STATIC WEB APPS CLI ##
 # Uncomment the below to install Azure Static Web Apps CLI
@@ -40,7 +41,7 @@ rm CascadiaCode.zip
 
 ## AZURE DEV CLI ##
 # Uncomment the below to install Azure Dev CLI
-# curl -fsSL https://aka.ms/install-azd.sh | bash
+curl -fsSL https://aka.ms/install-azd.sh | bash
 
 ## OH-MY-ZSH PLUGINS & THEMES (POWERLEVEL10K) ##
 # Uncomment the below to install oh-my-zsh plugins and themes (powerlevel10k) without dotfiles integration
