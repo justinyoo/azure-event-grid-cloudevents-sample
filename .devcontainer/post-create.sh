@@ -21,7 +21,7 @@ rm CascadiaCode.zip
 ## AZURE CLI EXTENSIONS ##
 # Uncomment the below to install Azure CLI extensions
 # extensions=$(az extension list-available --query "[].name" | jq -c -r '.[]')
-extensions="account alias deploy-to-azure eventgrid functionapp logic subscription webapp"
+extensions=(account alias deploy-to-azure eventgrid functionapp logic subscription webapp)
 for extension in $extensions;
 do
     az extension add --name $extension
