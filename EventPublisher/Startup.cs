@@ -7,6 +7,8 @@ using EventPublisher.Configs;
 
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Configurations.AppSettings.Extensions;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -36,6 +38,22 @@ namespace EventPublisher
                                    .GetService<IConfiguration>()
                                    .Get<EventGridSettings>(EventGridSettings.Name);
             services.AddSingleton(settings);
+
+            var codespaces = bool.TryParse(Environment.GetEnvironmentVariable("OpenApi__RunOnCodespaces"), out var isCodespaces) && isCodespaces;
+            if (codespaces)
+            {
+                /* ⬇️⬇️⬇️ Add this ⬇️⬇️⬇️ */
+                services.AddSingleton<IOpenApiConfigurationOptions>(_ =>
+                        {
+                            var options = new DefaultOpenApiConfigurationOptions()
+                            {
+                                IncludeRequestingHostName = false
+                            };
+
+                            return options;
+                        });
+                /* ⬆️⬆️⬆️ Add this ⬆️⬆️⬆️ */
+            }
         }
 
         private static void ConfigureClients(IServiceCollection services)
