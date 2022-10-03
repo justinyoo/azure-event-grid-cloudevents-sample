@@ -2,7 +2,7 @@
   "profiles": {
     "EventPublisher": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7297",
+      "commandLineArgs": "--port 7071",
       "launchBrowser": false
     }
   }
