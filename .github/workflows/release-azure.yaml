@@ -1,0 +1,22 @@
+name: Release to Azure
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  call_build_test_upload:
+    uses: ./.github/workflows/build-test-upload.yaml
+    secrets: inherit
+    with:
+      artifact_name: fncapp
+
+  call_deployment_azure:
+    uses: ./.github/workflows/deployment-azure.yaml
+    needs: 
+    - call_build_test_upload
+    secrets: inherit
+    with:
+      artifact_name: fncapp
+      do_not_deploy: 'false'
