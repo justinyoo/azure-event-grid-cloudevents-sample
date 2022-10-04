@@ -37,16 +37,16 @@ namespace EventPublisher
         }
 
         /// <summary>
-        /// Invokes the endpoint.
+        /// Invokes the convert endpoint.
         /// </summary>
         /// <param name="req"><see cref="HttpRequest"/> instance.</param>
         /// <returns>Returns <see cref="IActionResult"/> instance.</returns>
-        [FunctionName(nameof(EventConverterTrigger))]
+        [FunctionName(nameof(EventConverterTrigger.Convert))]
         [OpenApiOperation(operationId: "events.convert", tags: new[] { "events" }, Summary = "Convert event data and publish", Description = "This converts the payload to CloudEvents and publishes it", Visibility = OpenApiVisibilityType.Important)]
         [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(MyRequestData), Example = typeof(MyRequestDataExample), Required = true, Description = "The request payload")]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.OK, Summary = "The successful operation", Description = "It represents the successful operation")]
-        public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "events/convert")] HttpRequest req)
+        public async Task<IActionResult> Convert(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "POST", Route = "events/convert")] HttpRequest req)
         {
             this._logger.LogInformation("C# HTTP trigger function processed a request.");
 
@@ -56,14 +56,14 @@ namespace EventPublisher
             var data = default(MyRequestData);
             using (var reader = new StreamReader(req.Body))
             {
-                var serialised = await reader.ReadToEndAsync();
+                var serialised = await reader.ReadToEndAsync().ConfigureAwait(false);
                 data = JsonConvert.DeserializeObject<MyRequestData>(serialised);
             }
 
             var converted = new MyEventData() { Hello = data.Lorem };
             var @event = new CloudEvent(source, type, converted);
 
-            await this._publisher.SendEventAsync(@event);
+            await this._publisher.SendEventAsync(@event).ConfigureAwait(false);
 
             return new OkResult();
         }

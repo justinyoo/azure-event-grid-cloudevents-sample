@@ -37,15 +37,15 @@ namespace EventPublisher
         }
 
         /// <summary>
-        /// Invokes the endpoint.
+        /// Invokes the publish endpoint.
         /// </summary>
         /// <param name="req"><see cref="HttpRequest"/> instance.</param>
         /// <returns>Returns <see cref="IActionResult"/> instance.</returns>
-        [FunctionName(nameof(EventPublisherTrigger))]
+        [FunctionName(nameof(EventPublisherTrigger.Publish))]
         [OpenApiOperation(operationId: "events.publish", tags: new[] { "events" }, Summary = "Publish event", Description = "This publishes an event in CloudEvents format", Visibility = OpenApiVisibilityType.Important)]
         [OpenApiResponseWithoutBody(statusCode: HttpStatusCode.OK, Summary = "The successful operation", Description = "It represents the successful operation")]
-        public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "events/publish")] HttpRequest req)
+        public async Task<IActionResult> Publish(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "GET", Route = "events/publish")] HttpRequest req)
         {
             this._logger.LogInformation("C# HTTP trigger function processed a request.");
 
@@ -56,7 +56,7 @@ namespace EventPublisher
 
             var @event = new CloudEvent(source, type, data);
 
-            await this._publisher.SendEventAsync(@event);
+            await this._publisher.SendEventAsync(@event).ConfigureAwait(false);
 
             return new OkResult();
         }
